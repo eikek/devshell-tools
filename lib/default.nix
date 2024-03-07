@@ -1,0 +1,56 @@
+{
+  inputs,
+  nixosModules,
+  pkgsBySystem,
+}: let
+  nixpkgs = inputs.nixpkgs;
+in {
+  installScript = {
+    system,
+    script,
+  }:
+    nixpkgs.legacyPackages.${system}.concatTextFile {
+      name = builtins.baseNameOf script;
+      files = [script];
+      executable = true;
+      destination = "/bin/${builtins.baseNameOf script}";
+    };
+
+  mkContainer = {
+    system,
+    modules,
+  }:
+    nixpkgs.lib.nixosSystem {
+      inherit system;
+      specialArgs = {inherit inputs;};
+      modules =
+        (builtins.attrValues nixosModules)
+        ++ [
+          {
+            nixpkgs.pkgs = pkgsBySystem system;
+            system.stateVersion = "23.11";
+            boot.isContainer = true;
+          }
+        ]
+        ++ modules;
+    };
+
+  mkVm = {
+    system,
+    modules,
+  }:
+    nixpkgs.lib.nixosSystem {
+      inherit system;
+      specialArgs = {inherit inputs;};
+      modules =
+        (builtins.attrValues nixosModules)
+        ++ [
+          {
+            nixpkgs.pkgs = pkgsBySystem system;
+            system.stateVersion = "23.11";
+          }
+          ../internal/vm.nix
+        ]
+        ++ modules;
+    };
+}

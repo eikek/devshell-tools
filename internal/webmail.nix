@@ -67,6 +67,12 @@ in {
         example = "webmail.example.com";
         description = "The <literal>server_name</literal> directive for roundcube.";
       };
+
+      port = mkOption {
+        type = types.int;
+        default = 8080;
+        description = "The port for nginx to listen on";
+      };
     };
   };
 
@@ -76,6 +82,12 @@ in {
     services.nginx = {
       virtualHosts = {
         ${cfg.hostName} = {
+          listen = [
+            {
+              port = cfg.port;
+              addr = "0.0.0.0";
+            }
+          ];
           locations."/" = {
             root = myroundcube;
             index = "index.php";

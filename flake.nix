@@ -6,18 +6,78 @@
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = inputs@{
+  outputs = inputs @ {
     self,
     nixpkgs,
     flake-utils,
-  }:
+  }: let
+    legacyPackages = pkgs: let
+      startsWith = s: (
+        name: v: nixpkgs.lib.strings.hasPrefix s name
+      );
+      filter = s: set: nixpkgs.lib.attrsets.filterAttrs (startsWith s) set;
+      vm-scripts = filter "vm-" (import ./pkgs/vm-scripts.nix {
+        inherit (pkgs) writeShellScriptBin;
+      });
+      cnt-scripts = filter "cnt-" (import ./pkgs/cnt-scripts.nix {
+        inherit (pkgs) writeShellScriptBin jq;
+      });
+    in {
+      inherit vm-scripts cnt-scripts;
+    };
+
+    devshellToolsPkgs = pkgs: let
+      scripts = legacyPackages pkgs;
+    in
+      {
+        solr = pkgs.callPackage (import ./pkgs/solr.nix) {};
+        swagger-ui = pkgs.callPackage (import ./pkgs/swagger-ui.nix) {};
+      }
+      // scripts.vm-scripts
+      // scripts.cnt-scripts;
+
+    pkgsBySystem = system:
+      import nixpkgs {
+        inherit system;
+        overlays = [self.overlays.default];
+      };
+  in
     flake-utils.lib.eachDefaultSystem (system: let
       pkgs = nixpkgs.legacyPackages.${system};
     in {
       formatter = pkgs.alejandra;
-      packages = {
-        solr = pkgs.callPackage (import ./pkgs/solr.nix) {};
+      packages = devshellToolsPkgs pkgs;
+
+      legacyPackages = legacyPackages pkgs;
+
+      devShells.default = pkgs.mkShellNoCC {
+        buildInputs =
+          builtins.attrValues (devshellToolsPkgs pkgs);
       };
+
+      checks =
+        (devshellToolsPkgs pkgs)
+        // {
+          services = with import (nixpkgs + "/nixos/lib/testing-python.nix")
+          {
+            inherit system;
+          };
+            makeTest {
+              name = "devshell-tools";
+              nodes = {
+                machine = {...}: {
+                  imports =
+                    (builtins.attrValues self.nixosModules)
+                    ++ [
+                      {nixpkgs.pkgs = pkgsBySystem system;}
+                      ./checks
+                    ];
+                };
+              };
+
+              testScript = builtins.readFile ./checks/testScript.py;
+            };
+        };
     })
     // {
       nixosModules = {
@@ -25,10 +85,24 @@
         dev-email = import ./modules/email.nix;
         dev-postgres = import ./modules/postgresql.nix;
         dev-mariadb = import ./modules/mariadb.nix;
+        dev-redis = import ./modules/redis.nix;
+        dev-minio = import ./modules/minio.nix;
+        openapi-docs = import ./modules/openapi-docs.nix;
       };
 
       overlays = {
-        default = final: prev: self.${prev.system}.packages;
+        default = final: prev: devshellToolsPkgs final;
+      };
+
+      lib = import ./lib {
+        inherit inputs;
+        inherit (self) nixosModules;
+        inherit pkgsBySystem;
+      };
+
+      templates.default = {
+        path = ./template;
+        description = "An example template for devshell-tools";
       };
     };
 }

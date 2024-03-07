@@ -38,13 +38,13 @@ let
   '';
   checkpasswordScript = pkgs.writeScript "checkpassword-dovecot.sh" checkPassword;
   usersdir = "/var/data/devmail/users";
-  cfg = config.services.devmail;
+  cfg = config.services.dev-email;
 in
   with lib; {
-    imports = [./webmail.nix];
+    imports = [../internal/webmail.nix];
 
     options = {
-      services.devmail = {
+      services.dev-email = {
         enable = mkOption {
           default = false;
           description = "Enable devmail. This enables exim, dovecot, nginx with roundcube.";
@@ -59,14 +59,20 @@ in
         primaryHostname = mkOption {
           type = types.str;
           description = "The primary domain configured for exim and the nginx virtual server running roundcube.";
-          default = "devmail";
+          default = "localhost";
+        };
+
+        webmail-port = mkOption {
+          type = types.int;
+          default = 8080;
+          description = "webmail port";
         };
       };
     };
 
-    config = mkIf config.services.devmail.enable {
+    config = mkIf config.services.dev-email.enable {
       networking.firewall = {
-        allowedTCPPorts = [25 143 80];
+        allowedTCPPorts = [25 143 cfg.webmail-port];
       };
 
       users.groups.exim = {
@@ -84,6 +90,7 @@ in
       services.roundcubedev = {
         enable = true;
         hostName = cfg.primaryHostname;
+        port = cfg.webmail-port;
       };
 
       systemd.tmpfiles.rules = [
@@ -201,7 +208,7 @@ in
         '';
       };
 
-      systemd.services.devmail-setup = {
+      systemd.services.dev-email-setup = {
         wantedBy = ["multi-user.target"];
         script = ''
           mkdir -p ${usersdir}

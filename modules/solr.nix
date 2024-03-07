@@ -4,11 +4,11 @@
   pkgs,
   ...
 }: let
-  cfg = config.services.solr;
+  cfg = config.services.dev-solr;
 in {
   ## interface
   options = with lib; {
-    services.solr = {
+    services.dev-solr = {
       enable = mkOption {
         default = false;
         description = "Whether to enable solr.";
@@ -37,7 +37,7 @@ in {
   };
 
   ## implementation
-  config = lib.mkIf config.services.solr.enable {
+  config = lib.mkIf config.services.dev-solr.enable {
     # Create a user for solr
     users.users.solr = {
       isNormalUser = false;
@@ -52,6 +52,10 @@ in {
 
     environment.etc = {solr = {source = "${pkgs.solr}/server/solr";};};
 
+    networking.firewall = {
+      allowedTCPPorts = [cfg.port];
+    };
+
     # Create directories for storage
     systemd.tmpfiles.rules = [
       "d /var/solr 0755 solr solr - -"
@@ -59,7 +63,7 @@ in {
       "d /var/solr/logs 0755 solr solr - -"
     ];
 
-    systemd.services.solr = {
+    systemd.services.dev-solr = {
       enable = true;
       description = "Apache Solr";
       wantedBy = ["multi-user.target"];

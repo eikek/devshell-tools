@@ -63,8 +63,8 @@
   '';
 
   cnt-solr-recreate-core = writeShellScriptBin "cnt-solr-recreate-core" ''
-    ${cnt-solr-delete-core}/bin/solr-delete-core "$1"
-    ${cnt-solr-create-core}/bin/solr-create-core "$1"
+    ${cnt-solr-delete-core}/bin/cnt-solr-delete-core "$1"
+    ${cnt-solr-create-core}/bin/cnt-solr-create-core "$1"
   '';
 
   cnt-logs = writeShellScriptBin "cnt-logs" ''

@@ -54,7 +54,7 @@ in rec {
   '';
 
   vm-solr-recreate-core = writeShellScriptBin "vm-solr-recreate-core" ''
-    ${vm-solr-delete-core}/bin/solr-delete-core "$1"
-    ${vm-solr-create-core}/bin/solr-create-core "$1"
+    ${vm-solr-delete-core}/bin/vm-solr-delete-core "$1"
+    ${vm-solr-create-core}/bin/vm-solr-create-core "$1"
   '';
 }

@@ -36,12 +36,14 @@ in {
     services.postgresql = let
       pginit =
         pkgs.writeText "pginit.sql"
-        (builtins.concatStringsSep "\n" (map (user: ''
+        (builtins.concatStringsSep "\n" ((map (user: ''
             CREATE USER dev WITH PASSWORD '${user}' LOGIN CREATEDB;
             GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO ${user};
             GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO ${user};
           '')
-          cfg.users));
+          cfg.users) ++ (map (db: ''
+            CREATE DATABASE ${db} OWNER ${builtins.head cfg.users};
+          '') cfg.databases)));
     in {
       enable = true;
       package = pkgs.postgresql;

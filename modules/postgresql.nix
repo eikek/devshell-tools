@@ -37,13 +37,15 @@ in {
       pginit =
         pkgs.writeText "pginit.sql"
         (builtins.concatStringsSep "\n" ((map (user: ''
-            CREATE USER dev WITH PASSWORD '${user}' LOGIN CREATEDB;
-            GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO ${user};
-            GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO ${user};
-          '')
-          cfg.users) ++ (map (db: ''
-            CREATE DATABASE ${db} OWNER ${builtins.head cfg.users};
-          '') cfg.databases)));
+              CREATE USER dev WITH PASSWORD '${user}' LOGIN CREATEDB;
+              GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO ${user};
+              GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO ${user};
+            '')
+            cfg.users)
+          ++ (map (db: ''
+              CREATE DATABASE ${db} OWNER ${builtins.head cfg.users};
+            '')
+            cfg.databases)));
     in {
       enable = true;
       package = pkgs.postgresql;

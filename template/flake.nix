@@ -62,6 +62,8 @@
               port-forward.dev-minio-api = 9000;
               port-forward.dev-minio-console = 9001;
               networking.hostName = "dev-vm";
+
+              #virtualisation.memorySize = 4096;
             }
           ];
         };

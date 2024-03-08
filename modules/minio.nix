@@ -1,8 +1,11 @@
-{ config, pkgs, lib, ... }:
-let
-  cfg = config.services.dev-minio;
-in
 {
+  config,
+  pkgs,
+  lib,
+  ...
+}: let
+  cfg = config.services.dev-minio;
+in {
   options = with lib; {
     services.dev-minio = {
       enable = mkEnableOption "Minio";
@@ -41,14 +44,12 @@ in
       cfg.console-port
     ];
 
-    services.minio =
-      let
-        rootFile = pkgs.writeText "minio-root" ''
-          MINIO_ROOT_USER=${cfg.accessKey}
-          MINIO_ROOT_PASSWORD=${cfg.secretKey}
-        '';
-        in
-      {
+    services.minio = let
+      rootFile = pkgs.writeText "minio-root" ''
+        MINIO_ROOT_USER=${cfg.accessKey}
+        MINIO_ROOT_PASSWORD=${cfg.secretKey}
+      '';
+    in {
       enable = true;
       listenAddress = "0.0.0.0:${builtins.toString cfg.api-port}";
       consoleAddress = "0.0.0.0:${builtins.toString cfg.console-port}";

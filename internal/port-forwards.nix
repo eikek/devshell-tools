@@ -79,7 +79,7 @@ in {
       })
       (mkIf config.services.dev-solr.enable {
         from = "host";
-        host.port = cfg.solr;
+        host.port = cfg.dev-solr;
         guest.port = config.services.dev-solr.port;
       })
       (mkIf config.services.dev-email.enable {

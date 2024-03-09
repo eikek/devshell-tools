@@ -80,7 +80,13 @@ Nixpkgs dropped solr. So a simple package is included here.
 #### swagger-ui
 
 Packages the swagger-ui npm package to render openAPI specs in the
-browser. It is used by the `openapi-docs` module.
+browser. It is used by the `openapi-docs` package and module.
+
+#### openapi-docs
+
+Uses `swagger-ui` to provide a simple script that accepts an url to an
+openapi specification and will render its documentation in the
+browser by starting a simple http server.
 
 #### vm scripts
 

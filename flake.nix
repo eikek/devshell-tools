@@ -29,9 +29,12 @@
     devshellToolsPkgs = pkgs: let
       scripts = legacyPackages pkgs;
     in
-      {
+      rec {
         solr = pkgs.callPackage (import ./pkgs/solr.nix) {};
         swagger-ui = pkgs.callPackage (import ./pkgs/swagger-ui.nix) {};
+        openapi-docs = pkgs.callPackage (import ./pkgs/openapi-docs.nix) {
+          inherit swagger-ui;
+        };
       }
       // scripts.vm-scripts
       // scripts.cnt-scripts;

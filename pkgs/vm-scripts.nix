@@ -25,7 +25,7 @@ in rec {
     if [ -z "$VM_SSH_PORT" ]; then
         echo "Env var VM_SSH_PORT not defined, using default port 10022."
     fi
-    ssh -i ${key} -p $port root@localhost "$@"
+    ssh -i ${key} -p $port -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@localhost "$@"
   '';
 
   vm-logs = writeShellScriptBin "vm-logs" ''

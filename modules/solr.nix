@@ -25,7 +25,7 @@ in {
       };
       heap = mkOption {
         type = types.int;
-        default = 2048;
+        default = 512;
         description = "The heap setting in megabytes";
       };
       home-dir = mkOption {

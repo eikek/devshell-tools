@@ -21,5 +21,7 @@
     defaultLocale = "en_US.UTF-8";
   };
 
+  virtualisation.graphics = false;
+
   documentation.enable = false;
 }

@@ -1,4 +1,9 @@
-{ swagger-ui, python3, stdenvNoCC, writeText }:
+{
+  swagger-ui,
+  python3,
+  stdenvNoCC,
+  writeText,
+}:
 stdenvNoCC.mkDerivation {
   name = "openapi-docs-0.0.1";
 

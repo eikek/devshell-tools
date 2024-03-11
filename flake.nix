@@ -54,8 +54,12 @@
       legacyPackages = legacyPackages pkgs;
 
       devShells.default = pkgs.mkShellNoCC {
-        buildInputs =
-          builtins.attrValues (devshellToolsPkgs pkgs);
+        buildInputs = let
+          internalScripts = pkgs.callPackage (import ./internal/scripts.nix) {};
+        in [
+          internalScripts.cnt-recreate
+          internalScripts.cnt-login
+        ];
       };
 
       checks =
@@ -82,7 +86,7 @@
             };
         };
     })
-    // {
+    // rec {
       nixosModules = {
         dev-solr = import ./modules/solr.nix;
         dev-email = import ./modules/email.nix;
@@ -91,6 +95,21 @@
         dev-redis = import ./modules/redis.nix;
         dev-minio = import ./modules/minio.nix;
         openapi-docs = import ./modules/openapi-docs.nix;
+      };
+
+      nixosConfigurations = {
+        test = lib.mkContainer {
+          system = "x86_64-linux";
+          modules = [
+            {
+              services.dev-postgres = {
+                enable = true;
+                databases = ["somedb"];
+                pgweb.enable = true;
+              };
+            }
+          ];
+        };
       };
 
       overlays = {

@@ -27,11 +27,37 @@ in {
         default = 5432;
         description = "The port to bind to.";
       };
+      pgweb = mkOption {
+        type = types.submodule {
+          options = {
+            enable = mkEnableOption "pgweb";
+            port = mkOption {
+              type = types.int;
+              default = 5433;
+              description = "The http port to listen on";
+            };
+            database = mkOption {
+              type = types.nullOr types.str;
+              default = null;
+              description = "The default database to connect to";
+            };
+          };
+        };
+        default = {
+          enable = true;
+          port = 5433;
+          database = null;
+        };
+        description = "Enable pgweb";
+      };
     };
   };
 
-  config = lib.mkIf config.services.dev-postgres.enable {
-    networking.firewall.allowedTCPPorts = [config.services.postgresql.port];
+  config = lib.mkIf cfg.enable {
+    networking.firewall.allowedTCPPorts = [
+      config.services.postgresql.port
+      cfg.pgweb.port
+    ];
 
     services.postgresql = let
       pginit =
@@ -58,6 +84,42 @@ in {
       authentication = ''
         host  all  all 0.0.0.0/0 trust
       '';
+    };
+
+    users.users.pgweb = lib.mkIf cfg.pgweb.enable {
+      isNormalUser = false;
+      isSystemUser = true;
+      group = "pgweb";
+      useDefaultShell = true;
+    };
+    users.groups = lib.mkIf cfg.pgweb.enable {
+      pgweb = {};
+    };
+
+    systemd.services.pgweb = lib.mkIf cfg.pgweb.enable {
+      enable = true;
+      description = "pgweb";
+      wantedBy = ["multi-user.target"];
+      after = ["postgresql.service"];
+      requires = ["postgresql.service"];
+      environment = {
+      };
+      serviceConfig = let
+        user = builtins.head cfg.users;
+        port = builtins.toString cfg.pgweb.port;
+        db =
+          if cfg.pgweb.enable && (builtins.length cfg.databases) != 1 && builtins.isNull cfg.pgweb.database
+          then builtins.throw "Please specify a database for pgweb or at least one for postgresql - or disable pgweb."
+          else if cfg.pgweb.database == null
+          then builtins.head cfg.databases
+          else cfg.pgweb.database;
+      in {
+        ExecStart = ''
+          ${pkgs.pgweb}/bin/pgweb --bind 0.0.0.0 --listen ${port} --host localhost --user "${user}" --pass "${user}" --db "${db}" --ssl disable
+        '';
+        User = "pgweb";
+        Group = "pgweb";
+      };
     };
   };
 }

@@ -17,6 +17,11 @@ in {
         default = 15432;
         description = "The target port for postgres on the host";
       };
+      dev-pgweb = mkOption {
+        type = types.int;
+        default = 15433;
+        description = "The target port for pgweb on the host";
+      };
       dev-solr = mkOption {
         type = types.int;
         default = 18983;
@@ -71,6 +76,11 @@ in {
         from = "host";
         host.port = cfg.dev-postgres;
         guest.port = config.services.postgresql.port;
+      })
+      (mkIf config.services.dev-postgres.pgweb.enable {
+        from = "host";
+        host.port = cfg.dev-pgweb;
+        guest.port = config.services.dev-postgres.pgweb.port;
       })
       (mkIf config.services.openssh.enable {
         from = "host";

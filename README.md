@@ -165,6 +165,9 @@ development.
 Enables PostgreSQL with settings to be able to connect to it from
 anywhere. It creates a user `dev` with password `dev`.
 
+Additionally, `pgweb` is enabled by default on port `5433` for the
+first database specified for dev-postgres or the one given to the
+pgweb config.
 
 #### mariadb
 

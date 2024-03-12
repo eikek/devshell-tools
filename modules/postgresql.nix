@@ -44,7 +44,7 @@ in {
           };
         };
         default = {
-          enable = true;
+          enable = false;
           port = 5433;
           database = null;
         };

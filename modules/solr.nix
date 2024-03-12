@@ -101,8 +101,10 @@ in {
              echo "Waiting for SOLR become ready..."
              sleep 1.5
           done
-          for core in "${lib.concatStringsSep " " cfg.cores}"; do
-            ${pkgs.su}/bin/su solr -c "${pkgs.solr}/bin/solr create_core -c "$core" -p ${solrPort}";
+          for core in ${lib.concatStringsSep " " cfg.cores}; do
+            ${pkgs.su}/bin/su solr -c "${pkgs.solr}/bin/solr create -c \"$core\" -p ${solrPort}"
+          done
+          for core in ${lib.concatStringsSep " " cfg.cores}; do
             find ${cfg.home-dir}/$core/conf -type f -exec chmod 644 {} \;
           done
           touch ${cfg.home-dir}/cores-created

@@ -9,11 +9,15 @@ in {
     system,
     script,
   }:
-    nixpkgs.legacyPackages.${system}.concatTextFile {
+    nixpkgs.legacyPackages.${system}.stdenvNoCC.mkDerivation {
       name = builtins.baseNameOf script;
-      files = [script];
-      executable = true;
-      destination = "/bin/${builtins.baseNameOf script}";
+      src = script;
+      unpackPhase = "true";
+      installPhase = ''
+        mkdir -p $out/bin
+        cp $src $out/bin/$name
+        chmod 755 $out/bin/$name
+      '';
     };
 
   mkContainer = {

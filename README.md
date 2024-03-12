@@ -141,12 +141,10 @@ devShells.default = {
 The `lib` output has a few function that might be interesting to use
 in devshells.
 
-- `installScript`: tbh, I'm probably missing something but I couldn't
-  find it. The function takes a source script as input, makes it
-  executable and puts it into the store behind a `bin/` path so it
-  will be in your environment. It is only a thin wrapper around
-  `concatTextFile`. I found it useful when extracting longer scripts
-  into their own files.
+- `installScript`: Takes a script file as input, makes it executable
+  and puts it into the store behind a `bin/` path so it will be in
+  your environment. Like `writeScript` but referencing some file
+  instead of defining inline.
 - `mkVm` and `mkContainer`: Given a list of additional modules (and
   `system`…), it creates a NixOS container or vm that has all packages
   and modules of this flake included.

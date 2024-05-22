@@ -96,6 +96,7 @@ in {
       solrPort = toString cfg.port;
       initSolr = ''
         if [ ! -f ${cfg.home-dir}/cores-created ]; then
+          cp -r ${pkgs.solr}/server/solr/configsets ${cfg.home-dir}/
           while ! echo "" | ${pkgs.inetutils}/bin/telnet localhost ${solrPort}
           do
              echo "Waiting for SOLR become ready..."
@@ -108,6 +109,7 @@ in {
             find ${cfg.home-dir}/$core/conf -type f -exec chmod 644 {} \;
           done
           touch ${cfg.home-dir}/cores-created
+          chown -hR solr:solr ${cfg.home-dir}
         fi
       '';
     in {

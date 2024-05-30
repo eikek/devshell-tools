@@ -67,6 +67,11 @@ in {
         default = 9001;
         description = "The minio console port";
       };
+      dev-fuseki = mkOption {
+        type = types.int;
+        default = 3030;
+        description = "The fuseki server port";
+      };
     };
   };
 
@@ -131,6 +136,11 @@ in {
         from = "host";
         host.port = cfg.dev-minio-console;
         guest.port = config.services.dev-minio.console-port;
+      })
+      (mkIf config.services.dev-fuseki.enable {
+        from = "host";
+        host.port = cfg.dev-fuseki;
+        guest.port = config.services.dev-fuseki.port;
       })
     ];
   };

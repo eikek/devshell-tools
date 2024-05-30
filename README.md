@@ -204,3 +204,20 @@ password.
 
 Given an URL to a open api spec, sets up nginx to serve the rendered
 documentation page.
+
+#### Jena Fuseki
+
+Sets up a fuseki rdf server.
+
+## Dev
+
+Build the test container for trying out stuff:
+```
+nix build .#nixosConfigurations.test.config.system.build.toplevel
+```
+
+Run the test, create a container and start it:
+```
+sudo nixos-container create devshellt --flake .#test
+sudo nixos-container start devshellt
+```

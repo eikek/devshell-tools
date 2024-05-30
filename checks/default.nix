@@ -8,4 +8,5 @@
   services.dev-postgres.enable = true;
   services.dev-mariadb.enable = true;
   services.openapi-docs.enable = true;
+  services.dev-fuseki.enable = true;
 }

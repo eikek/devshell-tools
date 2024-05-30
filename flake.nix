@@ -97,6 +97,7 @@
         dev-redis = import ./modules/redis.nix;
         dev-minio = import ./modules/minio.nix;
         openapi-docs = import ./modules/openapi-docs.nix;
+        dev-fuseki = import ./modules/fuseki.nix;
       };
 
       nixosConfigurations = {
@@ -104,10 +105,9 @@
           system = "x86_64-linux";
           modules = [
             {
-              services.dev-postgres = {
+              services.dev-fuseki = {
                 enable = true;
-                databases = ["somedb"];
-                pgweb.enable = true;
+                datasets = ["someds"];
               };
             }
           ];

@@ -112,6 +112,12 @@ devShells.default = {
 };
 ```
 
+#### postgres-fg
+
+This package provides a simple shell script to start a postgresql
+server given any data directory and port. It might be handy for
+quickly running postgres ad-hoc.
+
 #### cnt scripts
 
 A collection of small scripts to manage dev containers that are
@@ -145,6 +151,7 @@ in devshells.
   and puts it into the store behind a `bin/` path so it will be in
   your environment. Like `writeScript` but referencing some file
   instead of defining inline.
+
 - `mkVm` and `mkContainer`: Given a list of additional modules (and
   `system`…), it creates a NixOS container or vm that has all packages
   and modules of this flake included.

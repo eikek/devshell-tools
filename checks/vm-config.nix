@@ -9,7 +9,7 @@
   console.keyMap = "us";
 
   users.users.root = {
-    password = "root";
+#    password = "root";
   };
 
   services.xserver = {
@@ -20,7 +20,7 @@
     hostName = "dst-test";
   };
 
-  system.stateVersion = "23.11";
+  system.stateVersion = "24.05";
 
   # This slows down the build of a vm
   documentation.enable = false;

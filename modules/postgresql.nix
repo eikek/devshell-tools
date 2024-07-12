@@ -55,7 +55,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     networking.firewall.allowedTCPPorts = [
-      config.services.postgresql.port
+      config.services.postgresql.settings.port
       cfg.pgweb.port
     ];
 
@@ -77,9 +77,9 @@ in {
       package = pkgs.postgresql;
       enableTCPIP = true;
       initialScript = pginit;
-      port = cfg.port;
       settings = {
         listen_addresses = "*";
+        port = cfg.port;
       };
       authentication = ''
         host  all  all 0.0.0.0/0 trust

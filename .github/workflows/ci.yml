@@ -1,0 +1,25 @@
+name: CI
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  flake-check:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v4.1.7
+        with:
+          fetch-depth: 100
+      - uses: cachix/install-nix-action@v27
+      - name: nix flake check
+        run: nix flake check

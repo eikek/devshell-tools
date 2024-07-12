@@ -80,7 +80,7 @@ in {
       (mkIf config.services.dev-postgres.enable {
         from = "host";
         host.port = cfg.dev-postgres;
-        guest.port = config.services.postgresql.port;
+        guest.port = config.services.postgresql.settings.port;
       })
       (mkIf config.services.dev-postgres.pgweb.enable {
         from = "host";

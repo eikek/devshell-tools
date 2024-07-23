@@ -27,6 +27,15 @@ in {
         default = 5432;
         description = "The port to bind to.";
       };
+      create-password-files = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Create plain text files containing the user passwords. This
+          is sometimes required by other services. It will be created
+          in /var/lib/pgpass_<user>
+        '';
+      };
       pgweb = mkOption {
         type = types.submodule {
           options = {
@@ -120,6 +129,14 @@ in {
         User = "pgweb";
         Group = "pgweb";
       };
+    };
+
+    system.activationScripts = lib.mkIf cfg.create-password-files {
+      pgpass = builtins.concatStringsSep "\n" ((map (user: ''
+          echo "${user}" > /var/lib/pgpass_${user}
+          chmod 644 /var/lib/pgpass_${user}
+        ''))
+        cfg.users);
     };
   };
 }

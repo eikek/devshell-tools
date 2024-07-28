@@ -158,6 +158,13 @@ in devshells.
 
 ### Modules
 
+#### keycloak
+
+Enables keycloak with http-only and an initial admin user with
+password `dev`. It make use of the `dev-postgres` module to setup the
+database by including a `keycloak` database. The default port
+configured is `8180`.
+
 #### solr
 
 There is a very simple module that allows to run solr on systemd. It
@@ -220,11 +227,14 @@ Sets up a fuseki rdf server.
 
 Build the test container for trying out stuff:
 ```
-nix build .#nixosConfigurations.test.config.system.build.toplevel
+nix build .#nixosConfigurations.devshcnt.config.system.build.toplevel
 ```
 
 Run the test, create a container and start it:
 ```
-sudo nixos-container create devshellt --flake .#test
-sudo nixos-container start devshellt
+sudo nixos-container create devshcnt --flake .#devshcnt
+sudo nixos-container start devshcnt
 ```
+
+or use the development shell and the provided scripts `cnt-recreate`
+and `cnt-login`.

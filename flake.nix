@@ -65,6 +65,8 @@
           internalScripts.cnt-login
           (devshellToolsPkgs pkgs).postgres-fg
         ];
+
+        DEV_CONTAINER = "devshcnt";
       };
 
       checks =
@@ -101,17 +103,22 @@
         dev-minio = import ./modules/minio.nix;
         openapi-docs = import ./modules/openapi-docs.nix;
         dev-fuseki = import ./modules/fuseki.nix;
+        dev-keycloak = import ./modules/keycloak.nix;
       };
 
       nixosConfigurations = {
-        test = lib.mkContainer {
+        devshcnt = lib.mkContainer {
           system = "x86_64-linux";
           modules = [
             {
-              services.dev-fuseki = {
+              services.dev-keycloak = {
                 enable = true;
-                datasets = ["someds"];
               };
+              services.dev-postgres = {
+                enable = true;
+                databases = ["mydb"];
+              };
+              networking.hostName = "devshcnt";
             }
           ];
         };

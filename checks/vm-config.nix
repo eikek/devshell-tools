@@ -9,7 +9,7 @@
   console.keyMap = "us";
 
   users.users.root = {
-#    password = "root";
+    #    password = "root";
   };
 
   services.xserver = {

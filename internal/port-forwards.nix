@@ -72,6 +72,11 @@ in {
         default = 3030;
         description = "The fuseki server port";
       };
+      dev-keycloak = mkOption {
+        type = types.int;
+        default = 8180;
+        description = "The keycloak web port";
+      };
     };
   };
 
@@ -141,6 +146,11 @@ in {
         from = "host";
         host.port = cfg.dev-fuseki;
         guest.port = config.services.dev-fuseki.port;
+      })
+      (mkIf config.services.dev-keycloak.enable {
+        from = "host";
+        host.port = cfg.dev-keycloak;
+        guest.port = config.services.dev-keycloak.http-port;
       })
     ];
   };

@@ -27,6 +27,11 @@ in {
         default = 5432;
         description = "The port to bind to.";
       };
+      pkg = mkOption {
+        type = types.package;
+        default = pkgs.postgresql;
+        description = "The PostgreSQL package to use.";
+      };
       create-password-files = mkOption {
         type = types.bool;
         default = false;
@@ -83,7 +88,7 @@ in {
             cfg.databases)));
     in {
       enable = true;
-      package = pkgs.postgresql;
+      package = cfg.pkg;
       enableTCPIP = true;
       initialScript = pginit;
       settings = {

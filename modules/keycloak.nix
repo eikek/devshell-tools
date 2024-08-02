@@ -58,8 +58,6 @@ in {
       };
     };
 
-    environment.systemPackages = [pkgs.keycloak];
-
     networking.firewall.allowedTCPPorts = [cfg.http-port 8443];
   };
 }

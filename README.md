@@ -158,6 +158,12 @@ in devshells.
 
 ### Modules
 
+#### Authentik
+
+Enables authentik with user `akadmin` and password `dev`. It depends
+on `dev-postgres` and `dev-redis`. The default port for the web
+interface is 9010.
+
 #### keycloak
 
 Enables keycloak with http-only and an initial admin user with

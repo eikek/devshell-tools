@@ -10,4 +10,9 @@
     cnt=''${DEV_CONTAINER:-devshcnt}
     sudo nixos-container root-login $cnt
   '';
+
+  cnt-logs = writeShellScriptBin "cnt-logs" ''
+    cnt=''${DEV_CONTAINER:-devshcnt}
+    sudo nixos-container run $cnt -- journalctl -efu "$1"
+  '';
 }

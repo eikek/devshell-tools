@@ -32,6 +32,7 @@
     AUTHENTIK_POSTGRESQL__NAME = "authentik";
     AUTHENTIK_POSTGRESQL__PASSWORD = "dev";
     AUTHENTIK_LISTEN__HTTP = "${cfg.bindAddress}:${toString cfg.port}";
+    AUTHENTIK_REDIS__PORT = toString cfg.redisPort;
   };
 in {
   ## interface
@@ -47,10 +48,16 @@ in {
         description = "The address to bind to";
       };
       port = mkOption {
-        type = types.int;
+        type = types.port;
         default = 9010;
         description = "The port authentik is listening on.";
       };
+      redisPort = mkOption {
+        type = types.port;
+        default = 6888;
+        description = "The redis port to use.";
+      };
+
       stateDir = mkOption {
         type = types.str;
         default = "/var/lib/dev-authentik";
@@ -83,7 +90,11 @@ in {
     };
     services.dev-redis = {
       enable = true;
-      instance = "authentik";
+      instances = {
+        authentik = {
+          port = cfg.redisPort;
+        };
+      };
     };
 
     system.activationScripts = {

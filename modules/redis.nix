@@ -9,27 +9,38 @@ in {
   options = with lib; {
     services.dev-redis = {
       enable = mkEnableOption "Dev Redis";
-      instance = mkOption {
-        type = types.str;
-        default = null;
-        description = "Redis instance name.";
+      instances = mkOption {
+        type = types.attrsOf (types.submodule {
+          options = {
+            port = mkOption {
+              type = types.port;
+              default = 6379;
+              description = "The port for the redis server";
+            };
+          };
+        });
+        default = {};
+        example = {myredis = {port = 6379;};};
+        description = "A set of redis server names to binding ports";
       };
     };
   };
 
-  config = lib.mkIf config.services.dev-redis.enable {
+  config = lib.mkIf cfg.enable {
     networking.firewall = {
-      allowedTCPPorts = [6379];
+      allowedTCPPorts = lib.attrsets.mapAttrsToList (name: mod: mod.port) cfg.instances;
     };
 
-    services.redis.servers.${cfg.instance} = {
-      enable = true;
-      port = 6379;
-      bind = "0.0.0.0";
-      openFirewall = true;
-      settings = {
-        "protected-mode" = "no";
-      };
-    };
+    services.redis.servers =
+      lib.mapAttrs (name: mod: {
+        enable = true;
+        port = mod.port;
+        bind = "0.0.0.0";
+        openFirewall = true;
+        settings = {
+          "protected-mode" = "no";
+        };
+      })
+      cfg.instances;
   };
 }

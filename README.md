@@ -158,6 +158,12 @@ in devshells.
 
 ### Modules
 
+#### Authentik
+
+Enables authentik with user `akadmin` and password `dev`. It depends
+on `dev-postgres` and `dev-redis`. The default port for the web
+interface is 9010.
+
 #### keycloak
 
 Enables keycloak with http-only and an initial admin user with
@@ -207,7 +213,22 @@ input more easily.
 
 #### redis
 
-Sets up a single redis instance with global access.
+Sets up a redis instances with global access. Only the instance name
+and port must be defined. Example
+
+```nix
+services.dev-redis = {
+  enable = true;
+  instances = {
+    myredis = {
+      port = 6379;
+    };
+    otherredis = {
+      port = 6380;
+    };
+  };
+};
+```
 
 #### minio
 

@@ -63,6 +63,7 @@
         in [
           internalScripts.cnt-recreate
           internalScripts.cnt-login
+          internalScripts.cnt-logs
           (devshellToolsPkgs pkgs).postgres-fg
         ];
 
@@ -104,6 +105,7 @@
         openapi-docs = import ./modules/openapi-docs.nix;
         dev-fuseki = import ./modules/fuseki.nix;
         dev-keycloak = import ./modules/keycloak.nix;
+        dev-authentik = import ./modules/authentik.nix;
       };
 
       nixosConfigurations = {
@@ -111,7 +113,7 @@
           system = "x86_64-linux";
           modules = [
             {
-              services.dev-keycloak = {
+              services.dev-authentik = {
                 enable = true;
               };
               services.dev-postgres = {

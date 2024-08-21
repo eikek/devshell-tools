@@ -10,4 +10,5 @@
   services.openapi-docs.enable = true;
   services.dev-fuseki.enable = true;
   services.dev-authentik.enable = true;
+  services.dev-spicedb.enable = true;
 }

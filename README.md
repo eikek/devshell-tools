@@ -158,6 +158,12 @@ in devshells.
 
 ### Modules
 
+#### SpiceDB
+
+The `dev-spicedb` module enables spicedb with a preshared-key `dev`.
+It depends on `dev-postgres` as it storage creating a `spicedb`
+postgres database.
+
 #### Authentik
 
 Enables authentik with user `akadmin` and password `dev`. It depends

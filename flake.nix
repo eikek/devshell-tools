@@ -106,6 +106,7 @@
         dev-fuseki = import ./modules/fuseki.nix;
         dev-keycloak = import ./modules/keycloak.nix;
         dev-authentik = import ./modules/authentik.nix;
+        dev-spicedb = import ./modules/spicedb.nix;
       };
 
       nixosConfigurations = {
@@ -113,7 +114,7 @@
           system = "x86_64-linux";
           modules = [
             {
-              services.dev-authentik = {
+              services.dev-spicedb = {
                 enable = true;
               };
               services.dev-postgres = {

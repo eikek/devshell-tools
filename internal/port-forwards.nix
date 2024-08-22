@@ -82,6 +82,11 @@ in {
         default = 9010;
         description = "The authentik web port";
       };
+      dev-spicedb = mkOption {
+        type = types.port;
+        default = 50051;
+        description = "The spicedb grpc port";
+      };
     };
   };
 
@@ -161,6 +166,11 @@ in {
         from = "host";
         host.port = cfg.dev-authentik;
         guest.port = config.services.dev-authentik.port;
+      })
+      (mkIf config.services.dev-spicedb.enable {
+        from = "host";
+        host.port = cfg.dev-spicedb;
+        guest.port = config.services.dev-spicedb.port;
       })
     ];
   };

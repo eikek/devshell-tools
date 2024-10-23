@@ -13,9 +13,11 @@ concurrency:
 
 jobs:
   flake-check:
-    runs-on: ubuntu-latest
     strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
       fail-fast: false
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4.1.7
         with:

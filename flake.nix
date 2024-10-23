@@ -72,7 +72,7 @@
 
       checks =
         (devshellToolsPkgs pkgs)
-        // {
+        // (if pkgs.stdenv.isLinux then {
           services = with import (nixpkgs + "/nixos/lib/testing-python.nix")
           {
             inherit system;
@@ -92,7 +92,7 @@
 
               testScript = builtins.readFile ./checks/testScript.py;
             };
-        };
+        } else {});
     })
     // rec {
       nixosModules = {
@@ -120,6 +120,9 @@
               services.dev-postgres = {
                 enable = true;
                 databases = ["mydb"];
+              };
+              services.openapi-docs = {
+                enable = true;
               };
               networking.hostName = "devshcnt";
             }

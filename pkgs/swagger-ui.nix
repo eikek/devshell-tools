@@ -1,13 +1,13 @@
 {
   buildNpmPackage,
   nodejs,
-  cypress,
+  coreutils,
   fetchFromGitHub,
 }:
 buildNpmPackage {
   name = "swagger-ui";
 
-  buildInputs = [nodejs cypress];
+  buildInputs = [nodejs];
 
   src = fetchFromGitHub {
     owner = "swagger-api";
@@ -20,7 +20,7 @@ buildNpmPackage {
 
   #https://gist.github.com/r-k-b/2485f977b476aa3f76a47329ce7f9ad4
   CYPRESS_INSTALL_BINARY = "0";
-  CYPRESS_RUN_BINARY = "${cypress}/bin/Cypress";
+  CYPRESS_RUN_BINARY = "${coreutils}/bin/true";
 
   npmBuildScript = "build:standalone";
 }

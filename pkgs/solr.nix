@@ -8,11 +8,11 @@
 # https://discourse.nixos.org/t/solr-has-been-removed-what-are-my-options/33504/3
 stdenv.mkDerivation rec {
   pname = "solr";
-  version = "9.4.1";
+  version = "9.7.0";
 
   src = fetchurl {
     url = "mirror://apache/solr/${pname}/${version}/${pname}-${version}.tgz";
-    sha256 = "sha256-QQFdemk/76S4pTf10Jgq2ujxPzgu3znJSjSX+bN4MlA=";
+    sha256 = "sha256-OFSLhvpOPIeIOHWVLaEkv310LLj3sl03oRdoM1iOhVI=";
   };
 
   nativeBuildInputs = [makeWrapper];

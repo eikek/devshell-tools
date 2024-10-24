@@ -114,7 +114,7 @@
           system = "x86_64-linux";
           modules = [
             {
-              services.dev-spicedb = {
+              services.dev-solr = {
                 enable = true;
               };
               services.dev-postgres = {

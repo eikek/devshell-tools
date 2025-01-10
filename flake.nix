@@ -72,27 +72,31 @@
 
       checks =
         (devshellToolsPkgs pkgs)
-        // (if pkgs.stdenv.isLinux then {
-          services = with import (nixpkgs + "/nixos/lib/testing-python.nix")
-          {
-            inherit system;
-          };
-            makeTest {
-              name = "devshell-tools";
-              nodes = {
-                machine = {...}: {
-                  imports =
-                    (builtins.attrValues self.nixosModules)
-                    ++ [
-                      {nixpkgs.pkgs = pkgsBySystem system;}
-                      ./checks
-                    ];
-                };
-              };
-
-              testScript = builtins.readFile ./checks/testScript.py;
+        // (
+          if pkgs.stdenv.isLinux
+          then {
+            services = with import (nixpkgs + "/nixos/lib/testing-python.nix")
+            {
+              inherit system;
             };
-        } else {});
+              makeTest {
+                name = "devshell-tools";
+                nodes = {
+                  machine = {...}: {
+                    imports =
+                      (builtins.attrValues self.nixosModules)
+                      ++ [
+                        {nixpkgs.pkgs = pkgsBySystem system;}
+                        ./checks
+                      ];
+                  };
+                };
+
+                testScript = builtins.readFile ./checks/testScript.py;
+              };
+          }
+          else {}
+        );
     })
     // rec {
       nixosModules = {

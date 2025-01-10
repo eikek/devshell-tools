@@ -41,6 +41,11 @@ in {
           in /var/lib/pgpass_<user>
         '';
       };
+      init-script = mkOption {
+        type = types.nullOr types.path;
+        default = null;
+        description = "A file with SQL commands to run at startup.";
+      };
       pgweb = mkOption {
         type = types.submodule {
           options = {
@@ -74,7 +79,7 @@ in {
     ];
 
     services.postgresql = let
-      pginit =
+      pg_users =
         pkgs.writeText "pginit.sql"
         (builtins.concatStringsSep "\n" ((map (user: ''
               CREATE USER dev WITH PASSWORD '${user}' LOGIN CREATEDB;
@@ -86,6 +91,11 @@ in {
               CREATE DATABASE ${db} OWNER ${builtins.head cfg.users};
             '')
             cfg.databases)));
+
+      pginit =
+        if builtins.isNull cfg.init-script
+        then pg_users
+        else (pkgs.concatText "pg_init_concat" [pg_users cfg.init-script]);
     in {
       enable = true;
       package = cfg.pkg;

@@ -22,7 +22,7 @@ in {
   };
 
   config = lib.mkIf config.services.dev-mariadb.enable {
-    networking.firewall.allowedTCPPorts = config.services.mysql.settings.mysqld.port;
+    networking.firewall.allowedTCPPorts = [config.services.mysql.settings.mysqld.port];
     services.mysql = {
       enable = true;
       package = pkgs.mariadb;

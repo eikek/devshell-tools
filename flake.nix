@@ -118,15 +118,9 @@
           system = "x86_64-linux";
           modules = [
             {
-              services.dev-solr = {
-                enable = true;
-              };
               services.dev-postgres = {
                 enable = true;
-                databases = ["mydb"];
-              };
-              services.openapi-docs = {
-                enable = true;
+                #                databases = ["mydb"];
               };
               networking.hostName = "devshcnt";
             }

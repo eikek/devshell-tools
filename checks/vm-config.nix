@@ -20,7 +20,7 @@
     hostName = "dst-test";
   };
 
-  system.stateVersion = "24.05";
+  system.stateVersion = "24.11";
 
   # This slows down the build of a vm
   documentation.enable = false;

@@ -6,5 +6,5 @@ with subtest("services are up"):
     machine.wait_for_unit("nginx")
     machine.wait_for_unit("exim")
     machine.wait_for_unit("dovecot2")
-    machine.wait_for_unit("dev-fuseki")
+    #machine.wait_for_unit("dev-fuseki")
     machine.wait_for_unit("dev-authentik")

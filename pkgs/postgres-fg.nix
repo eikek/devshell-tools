@@ -19,5 +19,5 @@ writeShellScriptBin "postgres-fg" ''
       ${postgresql}/bin/pg_ctl init -D "$data_dir"
   fi
 
-  ${postgresql}/bin/postgres -D "$data_dir" -k /tmp -h localhost -p $port
+  exec ${postgresql}/bin/postgres -D "$data_dir" -k /tmp -h localhost -p $port
 ''

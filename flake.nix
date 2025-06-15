@@ -2,7 +2,7 @@
   description = "Utilities for devshells";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
@@ -29,6 +29,7 @@
     devshellToolsPkgs = pkgs: let
       scripts = legacyPackages pkgs;
       sbts = pkgs.callPackage (import ./pkgs/sbt.nix) {};
+      mills = pkgs.callPackage (import ./pkgs/mill.nix) {};
       postgres-fg = pkgs.callPackage (import ./pkgs/postgres-fg.nix) {};
     in
       rec {
@@ -38,6 +39,7 @@
           inherit swagger-ui;
         };
         inherit (sbts) sbt11 sbt17 sbt21;
+        inherit (mills) mill17 mill21;
         inherit postgres-fg;
       }
       // scripts.vm-scripts

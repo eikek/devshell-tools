@@ -29,7 +29,8 @@
     devshellToolsPkgs = pkgs: let
       scripts = legacyPackages pkgs;
       sbts = pkgs.callPackage (import ./pkgs/sbt.nix) {};
-      mills = pkgs.callPackage (import ./pkgs/mill.nix) {};
+      mill1 = pkgs.callPackage (import ./pkgs/mill1.nix) {};
+      mills = pkgs.callPackage (import ./pkgs/mill.nix) {inherit mill1;};
       postgres-fg = pkgs.callPackage (import ./pkgs/postgres-fg.nix) {};
     in
       rec {
@@ -39,7 +40,8 @@
           inherit swagger-ui;
         };
         inherit (sbts) sbt11 sbt17 sbt21;
-        inherit (mills) mill17 mill21;
+        inherit (mills) mill17 mill21 mill1_17 mill1_21;
+        inherit mill1;
         inherit postgres-fg;
       }
       // scripts.vm-scripts

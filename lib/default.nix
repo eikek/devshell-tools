@@ -32,7 +32,7 @@ in {
         ++ [
           {
             nixpkgs.pkgs = pkgsBySystem system;
-            system.stateVersion = "24.05";
+            system.stateVersion = "25.05";
             boot.isContainer = true;
           }
         ]
@@ -51,7 +51,7 @@ in {
         ++ [
           {
             nixpkgs.pkgs = pkgsBySystem system;
-            system.stateVersion = "24.05";
+            system.stateVersion = "25.05";
           }
           ../internal/vm.nix
         ]

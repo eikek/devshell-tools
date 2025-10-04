@@ -4,19 +4,18 @@
   fetchurl,
   jre,
   makeWrapper,
-  which
+ which,
 }:
-
 stdenv.mkDerivation (finalAttrs: {
   pname = "mill";
-  version = "1.0.3";
+  version = "1.0.6";
 
   src = fetchurl {
     url = "https://repo1.maven.org/maven2/com/lihaoyi/mill-dist/${finalAttrs.version}/mill-dist-${finalAttrs.version}.exe";
-    hash = "sha256-T/Wl9A6iBt12so0SO+G8sfkiahyJp0/NqH7Rs1g2FSU=";
+    hash = "sha256-skyHd8S+lYGzH62CHBbWD72q4ionp2WwYmXxlKYUawg=";
   };
 
-  nativeBuildInputs = [ makeWrapper which ];
+  nativeBuildInputs = [makeWrapper which];
 
   dontUnpack = true;
   dontConfigure = true;

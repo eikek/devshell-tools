@@ -82,7 +82,7 @@ in {
       pg_users =
         pkgs.writeText "pginit.sql"
         (builtins.concatStringsSep "\n" ((map (user: ''
-              CREATE USER dev WITH PASSWORD '${user}' LOGIN CREATEDB;
+              CREATE USER dev WITH PASSWORD '${user}' LOGIN CREATEDB SUPERUSER;
               GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO ${user};
               GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO ${user};
             '')
